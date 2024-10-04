@@ -1,0 +1,103 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+
+.container {
+    display: flex;
+    height: 100vh;
+    background-color: #f7f7f7;
+}
+
+
+.image-section {
+    flex: 1;
+    background: url('img/pexels-imin-technology-276315592-12935041.jpg') no-repeat center center;
+    background-size: cover;
+    position: relative;
+}
+
+
+.image-section img {
+    display: none; 
+
+}
+
+
+.form-section {
+    flex: 1;
+    background-color: #f5f2d4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 50px;
+}
+
+.form-section h1 {
+    font-size: 2.5rem;
+    color: #f80410;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-section form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-section label {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 5px;
+   
+
+}
+
+.form-section input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #e01717;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.form-section input:focus {
+    outline: none;
+    border-color: #f7b731;
+    box-shadow: 0 0 5px rgba(247, 183, 49, 0.5);
+}
+
+.form-section button {
+    padding: 10px 20px;
+    background-color: #f7b731 ;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.form-section button:hover {
+    background-color: #d4a200;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .image-section {
+        height: 50vh;
+    }
+
+    .form-section {
+        height: 50vh;
+        padding: 20px;
+    }
+}

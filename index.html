@@ -1,0 +1,58 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Burger Shop</title>
+</head>
+
+<body>
+    <img src="burger-food-text-effect-editable-modern-lettering-typography-font-style (3) (1).png" alt="">
+    <div class="container" id="container">
+        <div class="form-container sign-up">
+            <form>
+                <h1>ADMIN PANEL</h1>
+                
+                <span>or use your email for registeration</span>
+               
+                <input type="email" placeholder="Email" id="email1">
+                <input type="password" placeholder="Password" id="password1">
+                <button id="login" onclick="login1btnAction(event)">Login</button>
+            </form>
+        </div>
+        <div class="form-container sign-in">
+            <form>
+                <h1>CASHIER</h1>
+                
+                <span>or use your email password</span>
+                <input type="email" placeholder="Email" id="email2">
+                <input type="password" placeholder="Password" id="password2">
+                <a href="#">Forget Your Password?</a>
+                <button onclick="login2btnAction(event)">Login</button>
+            </form>
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Login For Cashier!</h1>
+                    <p>Enter your personal details to use all of site features</p>
+                    <img src="img/pexels-dana-tentis-118658-750073.jpg" alt="Admin Image" class="toggle-image">
+                    <button class="hidden" id="trynow1">Try Now</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Login For Admin!</h1>
+                    <p>Register with your personal details to use all of site features</p>
+                    <img src="img/pexels-eduardo-krajan-424982200-15476360.jpg" alt="Admin Image" class="toggle-image">
+                    
+                    <button class="hidden" id="trynow2">Try Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

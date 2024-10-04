@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS System</title>
+    <link rel="stylesheet" href="css/order.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="path/to/bootstrap-icons.css">
+
+</head>
+<body>
+    <div class="pos-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <a href="dashboard.html" class="sidebar-item">
+             <i class="bi bi-house-door-fill"></i>
+            </a>
+            <a href="" class="sidebar-item">
+                <i class="bi bi-cart-dash"></i>
+            </a>
+            <a href="store.html" class="sidebar-item">
+                <i class="bi bi-shop"></i>
+            </a>
+            <a href="customers.html" class="sidebar-item">
+                <i class="bi bi-people-fill"></i>
+            </a>
+        </div>
+          
+        <!-- Main Content and Order Summary Container -->
+        <div class="main-content-container">
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Header -->
+                <header>
+                    <h1>Orders</h1>
+                    <input type="text" placeholder="Search...">
+                </header>
+
+                <!-- Categories -->
+                <div class="categories">
+                    <button class="category active" onclick="addProductCardsByCategory('All')">All</button>
+                    <button class="category" onclick="addProductCardsByCategory('Burgers')">Burgers</button>
+                    <button class="category" onclick="addProductCardsByCategory('Submarines')">Submarines</button>
+                    <button class="category" onclick="addProductCardsByCategory('Pasta')">Pasta</button>
+                    <button class="category" onclick="addProductCardsByCategory('Fries')">Fries</button>
+                    
+                    <button class="category" onclick="addProductCardsByCategory('Beverages')">Beverages</button>
+                </div>
+                
+                
+                
+                
+
+                <!-- Product Grid -->
+                <div class="product-grid">
+                    <!-- Product cards will be dynamically generated here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h2>Order </h2>
+                <div class="order-details">
+                    <!-- Selected Items -->
+                </div>
+                <div class="discount">
+                    <input type="text" placeholder="Discount" id="discountInput">
+                    <button onclick="applyDiscount()">Apply</button>
+
+                </div>
+                <div class="totals">
+                    <p id="subTotal">SubTotal: Rs. 0</p>
+                    <p id="discount" >Discount: Rs. 0</p>
+                    <p id="total">Total: Rs. 0</p>
+                </div>
+                <div class="actions">
+                    <button id="pay">Pay</button>
+                    <button id="cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <h2>Customer Info & Order Details</h2>
+            <input type="text" placeholder="Customer Name" id="customerName">
+            <input type="text" placeholder="Customer Phone Number" id="customerPhone">
+            <div id="orderSummary">
+                <!-- Order items will be dynamically inserted here -->
+            </div>
+            <div class="footer">
+                <p>SubTotal: <span id="modalSubtotal">Rs.0</span></p>
+                <p>Discount: <span id="modalDiscount">Rs.0</span></p>
+                <p>Total: <span id="modalTotal">Rs.0</span></p>
+                <button onclick="generatePDF()">Paid</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+
+    <script src="order.js"></script>
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+</body>
+
+
+</html>
+z
