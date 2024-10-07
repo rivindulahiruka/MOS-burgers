@@ -1,3 +1,11 @@
+let selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
+
+
+let globalOrderDetails = {
+  subtotal: 0,
+  discountValue: 0,
+  total: 0,
+};
 const allProducts = [
   { itemCode: "B1001", itemName: "Classic Burger (Large)", image: "img/OIP.jpeg", price: "750.00", discount: 0, Qty: 50, category: "Burgers" },
   { itemCode: "B1002", itemName: "Classic Burger (Regular)", image: "img/OIP.jpeg", price: "1500.00", discount: "15%", Qty: 50, category: "Burgers" },
@@ -77,51 +85,104 @@ function displayTable(category) {
 
 
 displayTable('All');
-let selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
 
-// Global order details
-let globalOrderDetails = {
-  subtotal: 0,
-  discountValue: 0,
-  total: 0,
-};
 
 
 function addProductCardsByCategory(category) {
   const allProducts = JSON.parse(localStorage.getItem('allProducts')) || [];
   const productGrid = document.querySelector('.product-grid');
 
-  
   productGrid.innerHTML = '';
 
   
   allProducts.forEach(product => {
-      if (category === 'All' || product.category === category) {
-          const productCard = document.createElement('div');
-          productCard.classList.add('product-card');
-          productCard.setAttribute('data-id', product.itemCode); 
-          productCard.innerHTML = `
-              <img src="${product.image}" alt="${product.itemName}">
-              <h2>${product.itemName}</h2>
-              <p>Rs. ${product.price}</p>
-          `;
-          productCard.addEventListener('click', () => handleCardClick(product));
-          productGrid.appendChild(productCard);
-      }
+    if (category === 'All' || product.category === category) {
+      const productCard = document.createElement('div');
+      productCard.classList.add('product-card');
+      productCard.setAttribute('data-id', product.itemCode);
+      productCard.innerHTML = `
+        <img src="${product.image}" alt="${product.itemName}">
+        <h2>${product.itemName}</h2>
+        <p>Rs. ${product.price}</p>
+      `;
+      productCard.addEventListener('click', () => handleCardClick(product));
+      productGrid.appendChild(productCard);
+    }
   });
 }
 
 function handleCardClick(product) {
+  console.log('Clicked product:', product);
+
   let index = selectedProducts.findIndex(item => item.itemCode === product.itemCode);
-  
+  console.log(index);
   if (index > -1) {
-      selectedProducts[index].quantity += 1; 
+    selectedProducts[index].quantity += 1; 
   } else {
-      selectedProducts.push({ ...product, quantity: 1 }); 
+    selectedProducts.push({ ...product, quantity: 1 }); 
   }
 
-  
+  console.log('Updated selectedProducts:', selectedProducts);
+
   updateOrderSummary();
+  saveToLocalStorage();
+}
+
+function saveToLocalStorage() {
+  localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+}
+function updateOrderSummary() {
+  const orderDetails = document.querySelector('.order-details');
+  orderDetails.innerHTML = '';  
+
+  let subtotal = 0;
+
+  
+  selectedProducts.forEach((item, index) => {
+    const productPrice = parseFloat(item.price);
+    const productTotal = productPrice * item.quantity;
+    subtotal += productTotal;
+
+    const orderItem = document.createElement('div');
+    orderItem.classList.add('order-item');
+    orderItem.innerHTML = `
+      <p>${item.itemName} (Rs. ${item.price})</p>
+      <div class="quantity-control">
+        <button onclick="adjustQuantity(${index}, -1)">-</button>
+        <span>${item.quantity}</span>
+        <button onclick="adjustQuantity(${index}, 1)">+</button>
+        Rs. ${productTotal.toFixed(2)}
+        <button onclick="removeItem(${index})">&#128465;</button>
+      </div>
+    `;
+
+    orderDetails.appendChild(orderItem);
+  });
+
+  
+  document.getElementById('subTotal').textContent = `SubTotal: Rs. ${subtotal.toFixed(2)}`;
+  globalOrderDetails.subtotal = subtotal;
+
+  applyDiscount();
+}
+
+
+function adjustQuantity(index, amount) {
+  selectedProducts[index].quantity += amount;
+
+  
+  if (selectedProducts[index].quantity < 1) {
+    selectedProducts.splice(index, 1);
+  }
+
+  updateOrderSummary();  
+  saveToLocalStorage();
+}
+
+
+function removeItem(index) {
+  selectedProducts.splice(index, 1);  
+  updateOrderSummary();  
   saveToLocalStorage();
 }
 
@@ -131,88 +192,41 @@ function saveToLocalStorage() {
 }
 
 
-function updateOrderSummary() {
-  const orderDetails = document.querySelector('.order-details');
-  orderDetails.innerHTML = '';
-  let subtotal = 0;
-
-  selectedProducts.forEach((item, index) => {
-    const productPrice = parseFloat(item.price);
-    const productTotal = productPrice * item.quantity;
-    subtotal += productTotal;
-
-    const orderItem = document.createElement('div');
-    orderItem.classList.add('order-item');
-    orderItem.innerHTML = `
-      <p>${item.itemName} (${item.discount} off)</p>
-      <div class="quantity-control">
-          <button onclick="adjustQuantity(${index}, -1)">-</button>
-          <span>${item.quantity}</span>
-          <button onclick="adjustQuantity(${index}, 1)">+</button>
-          Rs. ${productTotal.toFixed(2)}
-          <button onclick="removeItem(${index})">&#128465;</button>
-      </div>
-    `;
-    orderDetails.appendChild(orderItem);
-  });
-
-  document.getElementById('subTotal').textContent = `SubTotal: Rs. ${subtotal.toFixed(2)}`;
-  applyDiscount();
-
-
-  globalOrderDetails.subtotal = subtotal;
-
-  saveToLocalStorage();
-}
-
-
-function adjustQuantity(index, change) {
-  if (selectedProducts[index].quantity + change > 0) {
-    selectedProducts[index].quantity += change;
-  } else {
-    removeItem(index);
-  }
-  updateOrderSummary();
-}
-
-
-function removeItem(index) {
-  selectedProducts.splice(index, 1);
-  updateOrderSummary();
-}
-
-
 function applyDiscount() {
-  const discountInput = document.getElementById('discountInput');
-  const discountRate = parseFloat(discountInput.value) / 100 || 0; 
-  const discount = globalOrderDetails.subtotal * discountRate;
-  const total = globalOrderDetails.subtotal - discount;
+  const discountInput = document.getElementById('discountInput').value;
+  let discountValue = parseFloat(discountInput) || 0;  // Get discount value, default 0
 
-  globalOrderDetails.discountValue = discount;
-  globalOrderDetails.total = total;
+  let subtotal = globalOrderDetails.subtotal;
+  let total = subtotal - discountValue;
 
-  document.getElementById('discount').textContent = `Discount: Rs. ${discount.toFixed(2)}`;
+  document.getElementById('discount').textContent = `Discount: Rs. ${discountValue.toFixed(2)}`;
   document.getElementById('total').textContent = `Total: Rs. ${total.toFixed(2)}`;
-
-  
-  document.getElementById('modalSubtotal').textContent = `Rs. ${globalOrderDetails.subtotal.toFixed(2)}`;
-  document.getElementById('modalDiscount').textContent = `Rs. ${discount.toFixed(2)}`;
-  document.getElementById('modalTotal').textContent = `Rs. ${total.toFixed(2)}`;
-
-  saveToLocalStorage();
+  globalOrderDetails.discountValue = discountValue;
+  globalOrderDetails.total = total;
 }
 
-
-window.onload = () => {
-  addProductCardsByCategory('Burgers');
-  updateOrderSummary();
-   displayTable()
-};
-
-//------------ Modal handling------------------
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('paymentModal');
   const btn = document.getElementById('pay'); 
+  
+
+  btn.onclick = function() {
+    modal.style.display = "block";
+    populateOrderSummary();
+  };
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+}); 
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('paymentModal');
+  const btn = document.getElementById('pay'); 
+  
 
   btn.onclick = function() {
     modal.style.display = "block";
@@ -244,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 });
 
-//------------ generate PDF with order details
+
 function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -264,7 +278,7 @@ function generatePDF() {
   doc.text('Email: mosburgers@gmail.com', 10, 50);
   doc.text('Phone: +94 74 54 43 456', 10, 60);
 
-  // Table headers
+  
   doc.text('#', 10, 80);
   doc.text('Item', 20, 80);
   doc.text('Price', 100, 80);
@@ -328,7 +342,7 @@ function addItem() {
   const allProducts = JSON.parse(localStorage.getItem('allProducts')) || [];
   let image;
 
-  // Assign image based on category
+ 
   if (category === 'Burgers') {
       image = 'img/OIP.jpeg';
   } else if (category === 'Beverages') {
